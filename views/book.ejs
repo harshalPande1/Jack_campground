@@ -1,0 +1,137 @@
+<%- include('./header.ejs') -%>
+    <%- include('./util/flashmsg.ejs') -%>
+        <div class="container" id="main_container">
+            <div class="row">
+                <div class="col-6">
+                    <div class="mapConatiner">
+                        <div id='map' style='width: 400px; height: 255px;'></div>
+                    </div>
+                    <div class="container-md  text-center mt-1" style="font-family: 'Playfair Display', serif;"
+                        id="ImgContainer">
+                        <% if (result.Image) { %>
+                            <img src='<%=result.Image%>' class=" w-50" alt="goa">
+                            <% } else { %>
+
+
+                                <div id="carouselExampleFade" class="carousel slide carousel-fade"
+                                    data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <% result.pics.forEach((pic,i)=>{ %>
+                                            <div class="carousel-item <%= i == 0 ? 'active' : '' %> ">
+                                                <img src=<%=pic.url %> class="d-block" alt="pic" style="width: 100% ;
+                                                height:16rem;" >
+                                            </div>
+                                            <% }) %>
+
+                                    </div>
+                                    <% if(result.pics.length> 1) {%>
+                                        <button class="carousel-control-prev " type="button"
+                                            data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next " type="button"
+                                            data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                        <% } %>
+                                </div>
+
+                                <% } %>
+
+                                    <div class="container-sm main_detailesContainer">
+                                        <div class="detailes">
+                                            <h5 class=" imgDetailes mt-1 "> Spot : <%=result.Name%>
+                                            </h5>
+                                            <h5 class=" imgDetailes mt-1"> Price : <%=result.Price%>
+                                            </h5>
+                                            <h5 class=" imgDetailes mt-1 ">City : <%=result.Location%>
+                                            </h5>
+                                            <h5 class=" imgDetailes mt-1 ">Created By : <%=result.Author.username%>
+                                            </h5>
+                                        </div>
+                                        <% if(userlogin && result.Author._id.equals(userlogin._id)){ %>
+                                            <a href="/book/<%=result.id%>/<%=result.Name%>"
+                                                class="btn btn-warning btn-sm me-1 ">UPDATE</a>
+
+                                            <form action="/book/<%=result._id%>/delete?_method=DELETE" class="d-inline"
+                                                method="POST">
+                                                <button class="btn btn-danger btn-sm  me-auto">DELETE</button>
+                                            </form>
+                                            <% } %>
+                                    </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="  mt-1">
+                        <% if(userlogin) {%>
+                            <form action="/review/upload/<%=result._id%>" class="needs-validation" method="post"
+                                novalidate>
+                                <h3>Review : </h3>
+                                <label for="myreview">Review:</label>
+                                <textarea class="form-control" name="body" id="myreview" cols="30" rows="5"
+                                    required></textarea>
+                                <label for="myrating">Rating:</label>
+                                <fieldset class="starability-basic">
+                                    <legend>First rating:</legend>
+                                    <input type="radio" id="no-rate" class="input-no-rate" name="Rating" value="1"
+                                        checked aria-label="No rating." />
+                                    <input type="radio" id="first-rate1" name="Rating" value="1" />
+                                    <label for="first-rate1" title="Terrible">1 star</label>
+                                    <input type="radio" id="first-rate2" name="Rating" value="2" />
+                                    <label for="first-rate2" title="Not good">2 stars</label>
+                                    <input type="radio" id="first-rate3" name="Rating" value="3" />
+                                    <label for="first-rate3" title="Average">3 stars</label>
+                                    <input type="radio" id="first-rate4" name="Rating" value="4" />
+                                    <label for="first-rate4" title="Very good">4 stars</label>
+                                    <input type="radio" id="first-rate5" name="Rating" value="5" />
+                                    <label for="first-rate5" title="Amazing">5 stars</label>
+                                </fieldset>
+                                <button class="btn btn-success btn-sm mt-2" type="submit">add review</button>
+                            </form>
+                            <% } %>
+                    </div>
+                    <div class="card mt-2 " style="height: 16rem; width: 35rem;">
+                        <% result.Reviews.forEach((ele)=>{ %>
+                            <div class="card-body mb-2">
+                                Rating : <h4>
+                                    <!-- <%=ele.Rating%> -->
+                                    <p class="starability-result " data-rating=<%=ele.Rating%>>
+                                        Rated:<%=ele.Rating%>
+                                    </p>
+                                </h4>
+                                Review By : <h4>
+                                    <%=ele.Author.username%>
+                                </h4>
+                                Reviews : <p>
+                                    <%=ele.body%>
+                                </p>
+                                <% if(userlogin && ele.Author._id.equals(userlogin._id)) {%>
+                                    <form action="/review/book/<%=result._id%>/review/<%=ele._id%>?_method=DELETE"
+                                        method="post">
+                                        <button class="btn btn-danger" type="submit">X</button>
+                                    </form>
+                                    <% } %>
+                            </div>
+                            <% })%>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            mapboxgl.accessToken = "<%-process.env.MAPBOX_TOKEN%>";
+            const map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: <%- JSON.stringify(result.geometry.coordinates)%>,
+                zoom: 8
+            });
+            const marker2 = new mapboxgl.Marker()
+                .setLngLat(<%- JSON.stringify(result.geometry.coordinates)%>)
+               
+                .addTo(map);
+        </script>
+
+        <%- include('./footer.ejs') -%>

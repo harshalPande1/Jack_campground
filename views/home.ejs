@@ -1,0 +1,32 @@
+<%- include('./header.ejs') -%>
+    <%- include('./util/flashmsg.ejs') -%>
+        <div id="containermain" style="font-family: 'Playfair Display', serif;" class="row row-cols-3 mt-4 text-center">
+            <% result.forEach((ele)=>{ %>
+                <div id="cardcus">
+                    <div id="card-inner">
+                        <div id="front">
+                            <% if (ele.Image) { %>
+                                <img src='<%=ele.Image%>' id="cardImg" alt="goa" style="height: 18rem; width: 28rem">
+                                <% } else { %>
+                                    <% if (Array.isArray(ele.pics)) { %>
+                                        <img src=<%=ele.pics[0].url%> id="cardImg" alt="goa" style="height: 14rem; width: 23rem ">
+                                        <% } %>
+                                            <% } %>
+                        </div>
+                        <div id="back">
+                            <h5 class="card-title ms-2">
+                                <%= ele.Name %>
+                            </h5>
+                            <p class="card-text ms-2">
+                                <%= ele.Location %>
+                            </p>
+                            <p class="card-text ms-2">
+                                Rs : <%= ele.Price %>
+                            </p>
+                            <a href="/book/<%=ele._id%>" class="btn btn-light">See</a>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+        <%- include('./footer.ejs') -%>

@@ -1,0 +1,32 @@
+<%- include('./header.ejs') -%>
+<%- include('./util/flashmsg.ejs') -%>
+
+<form class="d-flex flex-column align-items-center needs-validation" action="/user/register" method="POST" novalidate>
+    <div class="mb-3 w-25">
+    <label class="form-label" for="email">Email:</label>
+    <input class="form-control " type="email" name="email" id="email" autocomplete="off" required>
+    <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+
+
+
+<div class="mb-3 w-25">
+    <label class="form-label" for="username">Username:</label>
+    <input class="form-control" type="text" name="username" id="username" autocomplete="off" required>
+    <div class="valid-feedback">
+        Looks good!
+      </div>
+</div>
+
+<div class="mb-3 w-25">
+    <label class="form-label" for="password">Password:</label>
+    <input class="form-control" type="password" name="password" id="password" autocomplete="off" required>
+    <div class="valid-feedback">
+        Looks good!
+      </div>
+</div>
+    <button class="btn btn-danger w-25" type="submit">Register</button>
+</form>
+<%- include('./footer.ejs') -%>

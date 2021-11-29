@@ -1,0 +1,42 @@
+    <%- include('./header.ejs') -%>
+    <%- include('./util/flashmsg.ejs') -%>
+
+        <form class="d-flex flex-column align-items-center needs-validation"
+        action="/book/<%=item._id%>/update?_method=PUT" method="POST" novalidate enctype="multipart/form-data">
+        <div class="mb-3 w-25">
+            <label class="form-label" for="name">Spot Name:</label>
+            <input class="form-control" type="text" name="Name" id="name" value="<%=item.Name%>" autocomplete="off"
+                required>
+        </div>
+
+        <div class="mb-3 w-25">
+            <label class="form-label" for="price">Price:</label>
+            <input class="form-control" type="text" name="Price" id="price" autocomplete="off" value="<%=item.Price%>"
+                required>
+        </div>
+
+        <div class="mb-3 w-25">
+            <label class="form-label" for="city">Location:</label>
+            <input class="form-control" type="text" name="Location" id="city" autocomplete="off"
+                value="<%=item.Location%>" required>
+        </div>
+
+        <div class="mb-3 w-25">
+            <label class="form-label" for="pic">add pic:</label>
+            <input class="form-control" type="file" name="image" id="pic" multiple>
+        </div>
+
+
+        <div class="mb-3">
+            <% item.pics.map((img,index)=>{ %>
+                <img src=<%=img.url %>  class=" mb-3 img-thumbnail" alt="" style="width : 10rem ; height : 10rem">
+                <label for="image-<%=index%>">delete ? </label>
+                <input type="checkbox" name="deleteImage[]" id="image-<%=index%>" value="<%=img.filename%>" >
+            <% }) %> 
+        </div>
+    
+        <button class="btn btn-warning w-25 mb-4" type="submit">UPDATE</button>
+    </form>
+   
+    
+    <%- include('./footer.ejs') -%>
